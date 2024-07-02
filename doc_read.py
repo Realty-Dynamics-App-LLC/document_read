@@ -60,6 +60,25 @@ def text_read(document):
     content += paragraph.text + "\n"  # Add paragraph text with newline
 
    return content
+
+def create_link(new_filename):  #creates article link
+    gen_link = "https://library.municode.com/fl/brevard_county/codes/code_of_ordinances?nodeId=COORBRCOFLVOII_CH62LADERE_ARTVIZORE"   #chapter link
+    #article = "ARTIINPUME" 
+    filename_split = new_filename.split('_')
+
+    for i in filename_split:
+      if i in ['AND','OR','FOR','OF']:
+        filename_split.remove(i)
+
+    article_no = filename_split[1]
+
+    article_name = 'ART' + article_no  # can be + '_1-2_' , "div"
+    n = len(filename_split)
+    for i in range(2,n):
+      article_name += filename_split[i][0:2]
+
+    final_link = gen_link + '_' + article_name
+    return final_link
    
 for i in file_list:
   filename = i
@@ -73,8 +92,8 @@ for i in file_list:
   skip_extension = fn - 4
   filename = i[0:skip_extension]
 
-  link = ""     #replace with document's link from municode 
   new_filename = filename.replace('.',"")   #replacing any other periods in filename to avoid wrong extension errors
+  link = create_link(new_filename)          #replace with document's link from municode 
 
   if len(document.tables) > 0:   #if tables present in document
     final_content = read_doc(document)
